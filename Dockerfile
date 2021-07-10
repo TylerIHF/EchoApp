@@ -27,3 +27,4 @@ RUN dotnet test EchoApp.sln --configuration Release
 # TODO FROM {An appropriate runtime image}
 # TODO COPY --from-build-env source desc
 ENTRYPOINT ["dotnet", "run", "--project", "EchoApp/EchoApp.csproj", "--configuration", "Release"] 
+EXPOSE 5000
