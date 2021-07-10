@@ -58,11 +58,13 @@ namespace EchoApp
             else
             {
                 app.UseExceptionHandler("/Error");
+		// TODO Using these security features will require me to figure out how to share certificates
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+	    // TODO Using these security features will require me to figure out how to share certificates
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
