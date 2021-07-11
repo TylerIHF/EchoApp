@@ -55,7 +55,7 @@ namespace EchoApp.Pages
 
 	public void OnPostSubmit(EchoRequestDTO body)
 	{
-	    Echo echo = _echoService.DoEcho("me", body.MessageText);
+	    Echo echo = _echoService.DoEcho(User.Identity.Name, body.MessageText);
             DTO = _translator.Translate(echo);
         }
     }

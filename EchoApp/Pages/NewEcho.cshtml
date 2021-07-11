@@ -15,6 +15,13 @@
  limitations under the License.
 -->
 
+@if(User.Identity.IsAuthenticated)
+{
+    <p>
+        @User.Identity.Name
+    </p>
+}
+
 <div class="text-center">
 @{
     if (@Model.DTO != null) {

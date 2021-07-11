@@ -53,7 +53,7 @@ namespace EchoApp.Pages
 	    int limit = 5;
 	    StringValues pageString = Request.Query["page"];
 	    int page = pageString == StringValues.Empty ? 0 : Int32.Parse(pageString[0]);
-	    List<Echo> echoPage = _echoService.GetEchoes("me", limit, page);
+	    List<Echo> echoPage = _echoService.GetEchoes(User.Identity.Name, limit, page);
 	    DTO = _translator.TranslateEchoPage(echoPage, limit, page);
         }
     }
