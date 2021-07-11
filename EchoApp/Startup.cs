@@ -18,11 +18,13 @@ using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 using EchoApp.Services;
 using EchoApp.Services.Impl;
 using EchoApp.Persistence.Repositories;
 using EchoApp.Persistence.Repositories.Impl;
+using EchoApp.Persistence.Config;
 
 namespace EchoApp
 {
@@ -71,9 +73,14 @@ namespace EchoApp
 			    	options.Conventions.AddPageRoute("/EchoList", "");
 			    });
 
-	    services.AddSingleton<IEchoService, EchoServiceImpl>();
-	    services.AddSingleton<ITranslator, TranslatorImpl>();
-	    services.AddSingleton<IEchoRepository, EchoRepositoryImpl>();
+	    services.AddDbContextPool<EchoDataContext>(options => {
+			    options.UseMySql(Configuration.GetConnectionString("EchoDB"),
+					    new MySqlServerVersion(new Version(5, 7, 0)));
+			    });
+
+	    services.AddScoped<IEchoService, EchoServiceImpl>();
+	    services.AddScoped<ITranslator, TranslatorImpl>();
+	    services.AddScoped<IEchoRepository, EchoRepositoryImpl>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -13,11 +13,14 @@
  */
 
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace EchoApp.Persistence.Models
 {
     public class Echo
     {
+	[Key]
+	public Int32 ID { get; set; }
         public string MessageText { get; set; }
         public string UserName { get; set; }
         public DateTime MessageDateTime { get; set; }

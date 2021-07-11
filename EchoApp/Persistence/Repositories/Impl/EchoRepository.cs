@@ -14,56 +14,37 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
 using EchoApp.Persistence.Models;
+using EchoApp.Persistence.Config;
 
 namespace EchoApp.Persistence.Repositories.Impl
 {
-    // TODO Figure out how to hook this up to a DB for real persistence
     public class EchoRepositoryImpl : IEchoRepository
     {
-        // Fake persistence
-        private static Dictionary<string, List<Echo>> echos = new Dictionary<string, List<Echo>>();
+	private EchoDataContext _echoDataContext;
+
+	public EchoRepositoryImpl(EchoDataContext echoDataContext) {
+	    _echoDataContext = echoDataContext;
+	}
 
         public Echo save(Echo echo)
         {
-            if (!echos.ContainsKey(echo.UserName))
-            {
-                echos.Add(echo.UserName, new List<Echo>());
-            }
-
-            List<Echo> userEchos = null;
-            if (echos.TryGetValue(echo.UserName, out userEchos))
-            {
-                userEchos.Add(echo);
-                return echo;
-            }
-            else
-            {
-                // TODO Throw a meaningful exception, this is probably and error
-                throw new Exception();
-            }
+	    _echoDataContext.Echos.Add(echo);
+	    _echoDataContext.SaveChanges();
+            return echo;
         }
 
         public List<Echo> GetEchoes(String user, Int32 limit, Int32 page)
         {
-            List<Echo> userEchos = null;
-            if (echos.TryGetValue(user, out userEchos))
-            {
-                Int32 offset = limit * page;
-
-                if (offset > userEchos.Count)
-                {
-                    return new List<Echo>();
-                }
-
-                limit = Math.Min(limit, userEchos.Count - offset);
-                return userEchos.GetRange(offset, limit);
-            }
-            else
-            {
-                // User not found => empty result
-                return new List<Echo>();
-            }
+	    Int32 offset = limit * page;
+	    return _echoDataContext.Echos
+		    .Where(e => e.UserName == user)
+		    .OrderByDescending(e => e.MessageDateTime)
+		    .Skip(offset)
+		    .Take(limit)
+		    .ToList();
         }
     }
 }
