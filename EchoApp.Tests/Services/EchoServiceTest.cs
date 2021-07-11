@@ -21,17 +21,25 @@ using EchoApp.Persistence.Repositories.Impl;
 using EchoApp.Services;
 using EchoApp.Services.Impl;
 using NUnit.Framework;
+using Microsoft.EntityFrameworkCore;
+using EchoApp.Persistence.Config;
+using Microsoft.EntityFrameworkCore.InMemory;
 
 namespace EchoApp.Tests.Services
 {
     [TestFixture]
     public class EchoServiceTest
     {
+	DbContextOptions<EchoDataContext> EchoDataContextOptions = new DbContextOptionsBuilder<EchoDataContext>()
+		.UseInMemoryDatabase(databaseName: "EchoDB")
+		.Options;
+
         [Test]
         public void DoEchoPristene()
         {
             // Setup
-            IEchoRepository echoRepository = new EchoRepositoryImpl();
+	    EchoDataContext echoDataContext = new EchoDataContext(EchoDataContextOptions);
+            IEchoRepository echoRepository = new EchoRepositoryImpl(echoDataContext);
             IEchoService echoService = new EchoServiceImpl(echoRepository);
             string user = Guid.NewGuid().ToString();
             string message = Guid.NewGuid().ToString();
@@ -54,7 +62,8 @@ namespace EchoApp.Tests.Services
         public void DoEchoUserNotNull()
         {
             // Setup
-            IEchoRepository echoRepository = new EchoRepositoryImpl();
+            EchoDataContext echoDataContext = new EchoDataContext(EchoDataContextOptions);
+            IEchoRepository echoRepository = new EchoRepositoryImpl(echoDataContext);
             IEchoService echoService = new EchoServiceImpl(echoRepository);
             string user = null;
             string message = Guid.NewGuid().ToString();
@@ -70,7 +79,8 @@ namespace EchoApp.Tests.Services
         public void DoEchoMessageNotNull()
         {
             // Setup
-            IEchoRepository echoRepository = new EchoRepositoryImpl();
+            EchoDataContext echoDataContext = new EchoDataContext(EchoDataContextOptions);
+            IEchoRepository echoRepository = new EchoRepositoryImpl(echoDataContext);
             IEchoService echoService = new EchoServiceImpl(echoRepository);
             string user = Guid.NewGuid().ToString();
             string message = null;
@@ -86,7 +96,8 @@ namespace EchoApp.Tests.Services
         public void DoEchoSeperateHistory()
         {
             // Setup
-            IEchoRepository echoRepository = new EchoRepositoryImpl();
+            EchoDataContext echoDataContext = new EchoDataContext(EchoDataContextOptions);
+            IEchoRepository echoRepository = new EchoRepositoryImpl(echoDataContext);
             IEchoService echoService = new EchoServiceImpl(echoRepository);
             string user1 = Guid.NewGuid().ToString();
             string user2 = Guid.NewGuid().ToString();
