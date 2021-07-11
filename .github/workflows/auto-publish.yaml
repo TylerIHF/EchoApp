@@ -30,7 +30,7 @@ jobs:
               cd IHFKluster
               git config user.name "Publish to IHFKluster"
               git config user.email "action@tylerihf.github.io"
-              sed -E 's/azurecr\.io\/echoapp:.*$/azurecr\.io\/echoapp:/' -i clusters/202FDF7A2DA04398A03073AFEFBE532C/production/echo-app.yaml
-              sed -E 's/azurecr\.io\/echoapp:.*$/azurecr\.io\/echoapp:/' -i clusters/202FDF7A2DA04398A03073AFEFBE532C/development/echo-app.yaml
+              sed -E 's/azurecr\.io\/echoapp:.*$/azurecr\.io\/echoapp:${{ github.sha }}/' -i clusters/202FDF7A2DA04398A03073AFEFBE532C/production/echo-app.yaml
+              sed -E 's/azurecr\.io\/echoapp:.*$/azurecr\.io\/echoapp:${{ github.sha }}/' -i clusters/202FDF7A2DA04398A03073AFEFBE532C/development/echo-app.yaml
               git commit -a -m "Auto Publish EchoApp ${{ github.sha }}"
               git push
