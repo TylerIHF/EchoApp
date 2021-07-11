@@ -6,7 +6,6 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    # checkout the repo
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@main
 
@@ -25,3 +24,13 @@ jobs:
         docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/echoapp:${{ github.sha }}
         docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/echoapp:${{ github.sha }}
 
+    - name: 'Publish to IHFKluster'
+      run: |
+              git clone https://user:${{ secrets.IHFKLUSTER_GITHUB_TOKEN }}@github.com/TylerIHF/IHFKluster.git
+              cd IHFKluster
+              git config user.name "Publish to IHFKluster"
+              git config user.email "action@tylerihf.github.io"
+              sed -E 's/azurecr\.io\/echoapp:.*$/azurecr\.io\/echoapp:/' -i clusters/202FDF7A2DA04398A03073AFEFBE532C/production/echo-app.yaml
+              sed -E 's/azurecr\.io\/echoapp:.*$/azurecr\.io\/echoapp:/' -i clusters/202FDF7A2DA04398A03073AFEFBE532C/development/echo-app.yaml
+              git commit -a -m "Auto Publish EchoApp ${{ github.sha }}"
+              git push
